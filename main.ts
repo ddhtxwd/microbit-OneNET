@@ -11,17 +11,18 @@
 namespace OneNET {
 
     let serial_read: string;
+    let receive_id: string;
+    let receive_value: string;
 
     let wifi_conneted: () => void = null;
     let mqtt_conneted: () => void = null;
     let mqtt_received: () => void = null;
     /**
-     * Wifi connection io init
-     * @param tx Tx pin; eg: SerialPin.P1
-     * @param rx Rx pin; eg: SerialPin.P2
+     * 初始化WIFI模块的串口
+     * @param tx ; eg: SerialPin.P1
+     * @param rx ; eg: SerialPin.P2
     */
-    //% blockId=WIFI_init block="Wifi init|Tx pin %tx|Rx pin %rx"
-    //% weight=100
+    //% block=初始化WIFI模块的串口 TX：$tx RX：$rx
     export function WIFI_init(tx: SerialPin, rx: SerialPin): void {
         serial.redirect(
             tx,
@@ -30,29 +31,40 @@ namespace OneNET {
         )
         basic.pause(500)
     }
-
-    //% blockId=WIFI_connect block="Wifi Join Aceess Point|%ap Password|%pass"
-    //% weight=98
+    /**
+     * 连接WIFI
+     * @param ssid ; eg: "WIFI"
+     * @param pass ; eg: "12345678"
+    */
+    //% block=连接WIFI 名称：$ssid 密码：$pass
     export function WIFI_connect(ssid: string, pass: string): void {
         let cmd: string = "AT+XMU_WIFI=" + ssid + ',' + pass + '\n'
         serial.writeString(cmd)
-        basic.pause(500) // it may took longer to finshed the ap join process
+        basic.pause(100)
     }
 
-    //% blockId=OneNET_connect block="Wifi Join Aceess Point|%ap Password|%pass"
-    //% weight=98
+    /**
+     * 连接OneNET
+     * @param product_id ; eg: "123456"
+     * @param machine_id ; eg: "123456789"
+     * @param pass ; eg: "1234"
+    */
+    //% block=连接OneNET 产品ID：$product_id 设备ID：$machine_id 鉴权信息：$pass
     export function OneNET_connect(product_id: string, machine_id: string, pass: string): void {
         let cmd: string = "AT+ONENET=" + product_id + ',' + machine_id + ',' + pass + '\n'
         serial.writeString(cmd)
-        basic.pause(500) // it may took longer to finshed the ap join process
+        basic.pause(100)
     }
-
-    //% blockId=OneNET_send block="Wifi Join Aceess Point|%ap Password|%pass"
-    //% weight=98
+    /**
+     * 向OneNET发送信息
+     * @param data_id ; eg: "temp"
+     * @param data_value ; eg: "28.5"
+    */
+    //% block=向OneNET发送信息 数据流名称：$data_id 内容：$data_value
     export function OneNET_send(data_id: string, data_value: string): void {
         let cmd: string = "AT+ON_SEND=" + data_id + ',' + data_value + '\n'
         serial.writeString(cmd)
-        basic.pause(500) // it may took longer to finshed the ap join process
+        basic.pause(100)
     }
 
     serial.onDataReceived('\n', function () {
@@ -65,38 +77,42 @@ namespace OneNET {
                 if (mqtt_conneted) mqtt_conneted()
             }
             else if (serial_read.concat("RECEIVE")) {
-
+                let start_index = 11
+                receive_value = serial_read.substr(start_index, serial_read.length - start_index)
+                if (mqtt_received) mqtt_received()
             }
         }
     })
 
     /**
-     * On wifi connected
-     * @param handler Wifi connected callback
+     * WIFI连接成功
+     * @param handler WIFI connected callback
     */
-    //% blockId=on_wifi_connected block="on Wifi Connected"
-    //% weight=94
+    //% block=WIFI连接成功
     export function on_wifi_connected(handler: () => void): void {
         wifi_conneted = handler;
     }
 
     /**
-     * On mqtt connected
+     * OneNET连接成功
      * @param handler MQTT connected callback
     */
-    //% blockId=on_mqtt_connected block="on MQTT Connected"
-    //% weight=94
+    //% block=OneNET连接成功
     export function on_mqtt_connected(handler: () => void): void {
         mqtt_conneted = handler;
     }
 
     /**
-     * On mqtt receiveed
+     * On 收到OneNET的命令
      * @param handler MQTT receiveed callback
     */
-    //% blockId=on_mqtt_receiveed block="on MQTT receiveed"
-    //% weight=94
+    //% block=收到OneNET的命令
     export function on_mqtt_receiveed(handler: () => void): void {
         mqtt_conneted = handler;
+    }
+
+    //% block="收到的命令"
+    export function get_value(): string {
+        return receive_value;
     }
 }
