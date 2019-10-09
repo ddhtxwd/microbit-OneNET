@@ -70,13 +70,13 @@ namespace OneNET {
     serial.onDataReceived('\n', function () {
         serial_read = serial.readString()
         if (serial_read.includes("AT")) {
-            if (serial_read.concat("XMU_WIFI") && serial_read.concat("OK")) {
+            if (serial_read.includes("XMU_WIFI") && serial_read.includes("OK")) {
                 if (wifi_conneted) wifi_conneted()
             }
-            else if (serial_read.concat("ONENET") && serial_read.concat("OK")) {
+            else if (serial_read.includes("ONENET") && serial_read.includes("OK")) {
                 if (mqtt_conneted) mqtt_conneted()
             }
-            else if (serial_read.concat("RECEIVE")) {
+            else if (serial_read.includes("RECEIVE")) {
                 let start_index = 11
                 receive_value = serial_read.substr(start_index, serial_read.length - start_index)
                 if (mqtt_received) mqtt_received()
