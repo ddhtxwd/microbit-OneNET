@@ -29,7 +29,7 @@ namespace OneNET {
             rx,
             BaudRate.BaudRate115200
         )
-        basic.pause(500)
+        basic.pause(1000)
     }
     /**
      * 连接WIFI
@@ -38,6 +38,7 @@ namespace OneNET {
     */
     //% block="连接WIFI 名称：$ssid 密码：$pass"
     export function WIFI_connect(ssid: string, pass: string): void {
+        basic.pause(500)
         let cmd: string = "AT+XMU_WIFI=" + ssid + ',' + pass + '\n'
         serial.writeString(cmd)
         basic.pause(500)
