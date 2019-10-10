@@ -40,7 +40,7 @@ namespace OneNET {
     export function WIFI_connect(ssid: string, pass: string): void {
         let cmd: string = "AT+XMU_WIFI=" + ssid + ',' + pass + '\n'
         serial.writeString(cmd)
-        basic.pause(100)
+        basic.pause(500)
     }
 
     /**
@@ -53,7 +53,7 @@ namespace OneNET {
     export function OneNET_connect(product_id: string, machine_id: string, pass: string): void {
         let cmd: string = "AT+ONENET=" + product_id + ',' + machine_id + ',' + pass + '\n'
         serial.writeString(cmd)
-        basic.pause(100)
+        basic.pause(500)
     }
     /**
      * 向OneNET发送信息
@@ -64,7 +64,7 @@ namespace OneNET {
     export function OneNET_send(data_id: string, data_value: string): void {
         let cmd: string = "AT+ON_SEND=" + data_id + ',' + data_value + '\n'
         serial.writeString(cmd)
-        basic.pause(100)
+        basic.pause(500)
     }
 
     serial.onDataReceived('\n', function () {
