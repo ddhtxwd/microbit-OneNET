@@ -108,7 +108,7 @@ namespace OneNET {
     */
     //% block="收到OneNET的命令"
     export function on_mqtt_receiveed(handler: () => void): void {
-        mqtt_conneted = handler;
+        mqtt_received = handler;
     }
 
     //% block="收到的命令"
