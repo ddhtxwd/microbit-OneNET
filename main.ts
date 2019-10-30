@@ -13,6 +13,7 @@ namespace OneNET {
     let serial_read: string;
     let receive_id: string;
     let receive_value: string;
+    let is_mqtt_conneted = false;
 
     let wifi_conneted: () => void = null;
     let mqtt_conneted: () => void = null;
@@ -53,6 +54,7 @@ namespace OneNET {
     //% block="连接OneNET 产品ID：$product_id 设备ID：$machine_id 鉴权信息：$pass"
     export function OneNET_connect(product_id: string, machine_id: string, pass: string): void {
         let cmd: string = "AT+ONENET=" + product_id + ',' + machine_id + ',' + pass + '\n'
+        is_mqtt_conneted = false
         serial.writeString(cmd)
         basic.pause(500)
     }
@@ -80,6 +82,7 @@ namespace OneNET {
             else if (serial_read.includes("RECEIVE")) {
                 let start_index = 11
                 receive_value = serial_read.substr(start_index, serial_read.length - start_index)
+                is_mqtt_conneted = true
                 if (mqtt_received) mqtt_received()
             }
         }
@@ -115,5 +118,10 @@ namespace OneNET {
     //% block="收到的命令"
     export function get_value(): string {
         return receive_value;
+    }
+
+    //% block="连接到服务器成功"
+    export function is_connected(): boolean {
+        return is_mqtt_conneted;
     }
 }
