@@ -77,12 +77,12 @@ namespace OneNET {
                 if (wifi_conneted) wifi_conneted()
             }
             else if (serial_read.includes("ONENET") && serial_read.includes("OK")) {
+                is_mqtt_conneted = true
                 if (mqtt_conneted) mqtt_conneted()
             }
             else if (serial_read.includes("RECEIVE")) {
                 let start_index = 11
                 receive_value = serial_read.substr(start_index, serial_read.length - start_index)
-                is_mqtt_conneted = true
                 if (mqtt_received) mqtt_received()
             }
         }
