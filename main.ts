@@ -83,6 +83,14 @@ namespace OneNET {
             else if (serial_read.includes("RECEIVE")) {
                 let start_index = 11
                 receive_value = serial_read.substr(start_index, serial_read.length - start_index)
+				while (receive_value.length > 0) {
+					let c = receive_value.substr(receive_value.length - 1, receive_value.length)
+					if (c == '\r' || c == '\n') {
+						receive_value = receive_value.substr(0, receive_value.length - 1)
+					} else {
+						break
+					}
+				}
                 if (mqtt_received) mqtt_received()
             }
         }
