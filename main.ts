@@ -30,7 +30,7 @@ namespace OneNET {
             rx,
             BaudRate.BaudRate115200
         )
-        basic.pause(1000)
+        basic.pause(100)
     }
     /**
      * 连接WIFI
@@ -39,10 +39,10 @@ namespace OneNET {
     */
     //% block="连接WIFI 名称：$ssid 密码：$pass"
     export function WIFI_connect(ssid: string, pass: string): void {
-        basic.pause(500)
+        basic.pause(50)
         let cmd: string = "AT+XMU_WIFI=" + ssid + ',' + pass + '\n'
         serial.writeString(cmd)
-        basic.pause(500)
+        basic.pause(50)
     }
 
     /**
@@ -56,7 +56,7 @@ namespace OneNET {
         let cmd: string = "AT+ONENET=" + product_id + ',' + machine_id + ',' + pass + '\n'
         is_mqtt_conneted = false
         serial.writeString(cmd)
-        basic.pause(500)
+        basic.pause(50)
     }
     /**
      * 向OneNET发送信息
@@ -67,7 +67,7 @@ namespace OneNET {
     export function OneNET_send(data_id: string, data_value: string): void {
         let cmd: string = "AT+ON_SEND=" + data_id + ',' + data_value + '\n'
         serial.writeString(cmd)
-        basic.pause(500)
+        basic.pause(50)
     }
 
     serial.onDataReceived('\n', function () {
@@ -131,5 +131,28 @@ namespace OneNET {
     //% block="连接到服务器成功"
     export function is_connected(): boolean {
         return is_mqtt_conneted;
+    }
+	
+	/**
+     * 向另一个设备发送信息
+     * @param data_id ; eg: "temp"
+     * @param data_value ; eg: "28.5"
+    */
+    //% block="向另一个设备发送信息 数据流名称：$data_id 内容：$data_value"
+    export function OneNET_publish(data_id: string, data_value: string): void {
+        let cmd: string = "AT+PUBLISH=" + data_id + ',' + data_value + '\n'
+        serial.writeString(cmd)
+        basic.pause(50)
+    }
+	
+	/**
+     * 开启接收另一个设备的信息
+     * @param data_id ; eg: "temp"
+    */
+    //% block="开启接收另一个设备的信息 数据流名称：$data_id"
+    export function OneNET_subscribe(data_id: string): void {
+        let cmd: string = "AT+SUBSCRIBE=" + data_id + '\n'
+        serial.writeString(cmd)
+        basic.pause(50)
     }
 }
