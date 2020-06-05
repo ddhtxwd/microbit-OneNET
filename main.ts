@@ -118,7 +118,7 @@ namespace OneNET {
      * On 收到OneNET的命令
      * @param handler MQTT receiveed callback
     */
-    //% block="收到OneNET的命令"
+    //% block="当收到命令时"
     export function on_mqtt_receiveed(handler: () => void): void {
         mqtt_received = handler;
     }
