@@ -135,10 +135,10 @@ namespace OneNET {
 	
 	/**
      * 向另一个设备发送信息
-     * @param data_id ; eg: "temp"
+     * @param data_id ; eg: "cmd"
      * @param data_value ; eg: "28.5"
     */
-    //% block="向另一个设备发送信息 数据流名称：$data_id 内容：$data_value"
+    //% block="向另一个设备发送信息 话题名称：$data_id 内容：$data_value"
     export function OneNET_publish(data_id: string, data_value: string): void {
         let cmd: string = "AT+PUBLISH=" + data_id + ',' + data_value + '\n'
         serial.writeString(cmd)
@@ -147,9 +147,9 @@ namespace OneNET {
 	
 	/**
      * 开启接收另一个设备的信息
-     * @param data_id ; eg: "temp"
+     * @param data_id ; eg: "cmd"
     */
-    //% block="开启接收另一个设备的信息 数据流名称：$data_id"
+    //% block="开启接收另一个设备的信息 话题名称：$data_id"
     export function OneNET_subscribe(data_id: string): void {
         let cmd: string = "AT+SUBSCRIBE=" + data_id + '\n'
         serial.writeString(cmd)
