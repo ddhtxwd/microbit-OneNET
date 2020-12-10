@@ -160,7 +160,7 @@ namespace OneNET {
 
 
 
-enum PingUnit {
+enum SonicPingUnit {
     //% block="厘米"
     Centimeters,
     //% block="微秒"
@@ -571,7 +571,7 @@ namespace sensors {
      * @param maxCmDistance maximum distance in centimeters (default is 500)
      */
     //% blockId=sonar_ping block="超声波| trig %trig|echo %echo|单位 %unit"
-    export function ping(trig: DigitalPin, echo: DigitalPin, unit: PingUnit, maxCmDistance = 500): number {
+    export function ping(trig: DigitalPin, echo: DigitalPin, unit: SonicPingUnit, maxCmDistance = 500): number {
         // send pulse
         pins.setPull(trig, PinPullMode.PullNone);
         pins.digitalWritePin(trig, 0);
@@ -584,8 +584,8 @@ namespace sensors {
         const d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
 
         switch (unit) {
-            case PingUnit.Centimeters: return Math.idiv(d, 58);
-            case PingUnit.Inches: return Math.idiv(d, 148);
+            case SonicPingUnit.Centimeters: return Math.idiv(d, 58);
+            case SonicPingUnit.Inches: return Math.idiv(d, 148);
             default: return d;
         }
     }
